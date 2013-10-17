@@ -122,7 +122,7 @@ while 1:
         print("Dateiname:"+fn)
         
         os.system("scanimage --format=tiff --mode=Color --resolution=300 -p > "+fn)
-        
+     
     elif e.lower()=="q":
         # input q, quit
         break
