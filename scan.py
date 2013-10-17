@@ -121,11 +121,7 @@ while 1:
         
         print("Dateiname:"+fn)
         
-<<<<<<< HEAD
-        call("scanimage --format=tiff --mode=Color --resolution=300 -p > "+fn)
-=======
         os.system("scanimage --format=tiff --mode=Color --resolution=300 -p > "+fn)
->>>>>>> changed system call to os.system();
         
     elif e.lower()=="q":
         # input q, quit
