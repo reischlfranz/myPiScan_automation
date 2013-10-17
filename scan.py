@@ -119,7 +119,7 @@ while 1:
         # filename=execfile("filenaming.py")
         fn=getfilename()
         
-        call("scanimage --format=tiff --mode=Color --resolution=300 -p > ./"+fn)
+        os.system("scanimage --format=tiff --mode=Color --resolution=300 -p > test.tiff")
         
     elif e.lower()=="q":
         # input q, quit
