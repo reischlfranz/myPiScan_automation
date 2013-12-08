@@ -6,6 +6,28 @@ import os
 import time
 from datetime import datetime
 from subprocess import call
+from time import sleep
+
+#import Raspberry Pi GPIO module
+import RPi.GPIO as GPIO
+
+# Set the mode of numbering the pins. 
+GPIO.setmode(GPIO.BOARD)
+
+# Disable Already In Use warnings
+GPIO.setwarnings(False)
+
+# GPIO pin 8 as input. 
+GPIO.setup(8, GPIO.IN) 
+
+# GPIO pin 10, 12 as output
+GPIO.setup(10, GPIO.OUT) # Green
+GPIO.setup(12, GPIO.OUT) # Yellow
+
+# Set 10 to True (LED off)
+GPIO.output(10,True)
+GPIO.output(12,True)
+
 
 def getfilename():
     # Initiating file and path parameters
@@ -33,11 +55,12 @@ def getfilename():
     
     # get current time
     str_time=datetime.now().strftime("%H_%M_%S")
+
     # for testing purposes: strip the second of the filename and you have the chance to get a double filename
-    #str_time=datetime.now().strftime("%H_%M")
+    # str_time=datetime.now().strftime("%H_%M")
     
     # DEBUG output: print date and time
-    str_out="Heute ist: "+str_date+". Uhrzeit ist: "+str_time
+    str_out="Todays date:: "+str_date+". Current time: "+str_time
     print(str_out)
     
     # contencate filename
@@ -50,7 +73,7 @@ def getfilename():
     
     if not os.access(str_filepath+str_filename, os.F_OK):
         # DEBUG output: XXXXX
-        str_out="Datei existiert noch nicht: "+str_filename
+        str_out="File does not exist: "+str_filename
         print(str_out)
         
         # TESTING create an empty file there
@@ -60,7 +83,7 @@ def getfilename():
         
     else:
         # DEBUG output: XXXXX
-        str_out="Datei existiert bereits: "+str_filename
+        str_out="File does already exist: "+str_filename
         print(str_out)
         i=0
         while i<=num_iter:
@@ -69,7 +92,7 @@ def getfilename():
             if not os.access(str_filepath+str_filename, os.F_OK):
                 
                 # DEBUG output: XXXXX
-                str_out="Datei existiert noch nicht: "+str_filename
+                str_out="File does not exist: "+str_filename
                 print(str_out)
     
                 print(str_filename)
@@ -77,7 +100,7 @@ def getfilename():
                 break;
             else:
                 # DEBUG output: XXXXX
-                str_out="Datei existiert noch nicht: "+str_filename
+                str_out="File does already exist: "+str_filename
                 print(str_out)
     
                 i=i+1            
@@ -87,9 +110,9 @@ def getfilename():
             
         #end while
         
-        if i==num_iter:
+        if i>=num_iter:
             # Too much iterations, giving up
-            
+            print("Too many iterations, giving up")
             return -1
             
         #end if
@@ -103,32 +126,63 @@ def getfilename():
 
 
 
-print("program start")
+print("Program start. System Info (Python version):")
 print(sys.version)
 print("------------")
+print("Additional info:")
 print(sys.version_info)
 print("------------")
-print("------------")
+print(" ")  
+print("Ready for new scan.")
+
+GPIO.output(10, False) #Green LED on -> System ready.
 
 while 1:
-    e = ""
-    print ('Push the button: [Enter] to scan / [Q] to quit');
-    e = raw_input('now');
-    if e=="":
+
+
+    if GPIO.input(8):
         # No input, Scan
+        
+        
+        GPIO.output(12, False) # Yellow LED on -> working
+        GPIO.output(10, True) # Green LED off -> scanning in progress
+        
         # filename=execfile("filenaming.py")
         fn=getfilename()
         
-        print("Dateiname:"+fn)
+        print("Filename:"+fn)
         
-        os.system("scanimage --format=tiff --mode=Color --resolution=300 -p > "+fn+"&& convert "+fn+" "+fn+".jpg")
-     
-    elif e.lower()=="q":
-        # input q, quit
-        break
-    #end if
-    
-    
+        os.system("scanimage --format=tiff --mode=Color --resolution=300 -p > "+fn)
+ 
+
+        GPIO.output(10, False) # Green LED on -> scanning done
+
+        print("\n")  
+        print("Scan complete. Converting to jpg...")
+
+        os.system("convert "+fn+" "+fn+".jpg")
+        
+        print("Conversion complete. Deleting TIFF...")
+        
+        # Comment out the next line if you want to keep the TIFF
+        os.system("rm -f "+fn)
+
+        # Setting ownership of file to samba user
+        # This might be purly subjective...
+#        os.system("chown nobody:nogroup "+fn)
+
+        os.system("chmod 777 "+fn)
+
+        print("Done.")
+        
+        # I could copy files to network drive now...
+        GPIO.output(12, True) #Yellow LED off -> complete
+
+        print(" ")  
+        print("Ready for new scan.")
+
+
+    #sleep(0.5)
 
 #end while
 
