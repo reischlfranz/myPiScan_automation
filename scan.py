@@ -125,6 +125,24 @@ def getfilename():
 
 
 
+def tiffcheck(f,size=1024):
+    pos=f.seek(-size,os.SEEK_END)
+    
+    for i in range(size-2):
+        ch=f.read(1)
+        if ch=="":
+            print("EOF found prior")
+            return 1
+        if not ch==chr(0xff):
+            print("Abbruch, anderen char gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
+            return 0
+        print("Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell())) # DEBUG Info
+        #f.seek(1,os.SEEK_CUR)
+    
+    return 1
+
+
+
 
 print("Program start. System Info (Python version):")
 print(sys.version)
@@ -142,35 +160,68 @@ while 1:
 
     if GPIO.input(8):
         # No input, Scan
+
+        # Open Logfile, Write timestamp
+        f_file=open("/public/img_log.txt", mode='a')
+        f_file.write("Scan gestartet:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         
-        
+        # Setting LEDs
         GPIO.output(12, False) # Yellow LED on -> working
         GPIO.output(10, True) # Green LED off -> scanning in progress
         
-        # filename=execfile("filenaming.py")
+        # Generate Filename
         fn=getfilename()
         
         print("Filename:"+fn)
-        
-        os.system("scanimage --format=tiff --mode=Color --resolution=300 -p > "+fn)
- 
+        f_file.write("generated Filename:"+fn)
 
+        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn)
+
+        out_str=str(out)
+        print("\n\nScan: "+out_str)
+        f_file.write("Return value scanimage: "+out_str)
+
+        # Setting LEDs
         GPIO.output(10, False) # Green LED on -> scanning done
+
+        # Insert TIFF Broken Check here!
+        # ---
+        tiff_file=open(fn,mode='rb')
+        tiff_broken=tiffcheck(tiff_file, 1024)
+        
+        if tiff_broken==0:
+            print("TIFF is OK, continue")
+        else:
+            print("TIFF is broken")
+        # ---
+        # TIFF Broken Check done
 
         print("\n")  
         print("Scan complete. Converting to jpg...")
+        f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S"))
 
-        os.system("convert "+fn+" "+fn+".jpg")
+        out=os.system("convert "+fn+" "+fn+"__"+out_str+"__.jpg")
+        out_str=str(out)
+        print("\nConv: "+out_str)
         
         print("Conversion complete. Deleting TIFF...")
+        f_file.write("Conversion complete. Deleting/Archiving TIFF... "+datetime.now().strftime("%H:%M:%S"))
         
         # Comment out the next line if you want to keep the TIFF
-        os.system("rm -f "+fn)
+        # os.system("rm -f "+fn)
+        
+        #DEBUG: Keep TIFF in archive
+        if not os.access("/public/img/archive", os.F_OK):
+            os.system("mkdir /public/img/archive")
+        os.system("mv "+fn+" /public/img/archive")
 
-        # Setting ownership of file to samba user
-        # This might be purly subjective...
-#        os.system("chown nobody:nogroup "+fn)
+        # allow deletion of archived TIFF
+        os.system("chmod 777 /public/img/archive/"+fn)
 
+
+        # Allow deletion of Image for everyone
+        # By default, all files created by this script will be owned by root!
+        # Note: If you want to restrict access to certain users, be sure to use the right chown
         os.system("chmod 777 "+fn)
 
         print("Done.")
@@ -182,7 +233,7 @@ while 1:
         print("Ready for new scan.")
 
 
-    #sleep(0.5)
+        sleep(5)
 
 #end while
 
