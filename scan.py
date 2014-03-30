@@ -172,7 +172,7 @@ while 1:
 
         # Open Logfile, Write timestamp
         f_file=open("./img_log.txt", mode='a')
-        f_file.write("Scan gestartet:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        f_file.write("Scan gestartet:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\n")
         
         # Setting LEDs
         GPIO.output(12, False) # Yellow LED on -> working
@@ -182,13 +182,13 @@ while 1:
         fn=getfilename()
         
         print("Filename:"+fn)
-        f_file.write("generated Filename:"+fn)
+        f_file.write("generated Filename:"+fn+"\n")
 
         out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
 
         out_str=str(out)
         print("\n\nScan: "+out_str)
-        f_file.write("Return value scanimage: "+out_str)
+        f_file.write("Return value scanimage: "+out_str+"\n")
 
         # Setting LEDs
         GPIO.output(10, False) # Green LED on -> scanning done
@@ -207,14 +207,14 @@ while 1:
 
         print("\n")  
         print("Scan complete. Converting to jpg...")
-        f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S"))
+        f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S")+"\n")
 
         out=os.system("convert "+fn+str_filetype+" "+fn+"_"+out_str+".jpg")
         out_str=str(out)
         print("\nConv: "+out_str)
         
         print("Conversion complete. Deleting TIFF...")
-        f_file.write("Conversion complete. Deleting/Archiving TIFF... "+datetime.now().strftime("%H:%M:%S"))
+        f_file.write("Conversion complete. Deleting/Archiving TIFF... "+datetime.now().strftime("%H:%M:%S")+"\n")
         
         # Comment out the next line if you want to keep the TIFF
         # os.system("rm -f "+fn+str_filetype)
