@@ -184,7 +184,7 @@ while 1:
         print("Filename:"+fn)
         f_file.write("generated Filename:"+fn+"\n")
 
-        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
+        out=os.system("scanimage --format=tiff --mode=Gray --resolution=150 -p -v > "+fn+str_filetype)
 
         # Allow deletion of TIFF Image for everyone
         # By default, all files created by this script will be owned by root!
