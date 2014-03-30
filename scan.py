@@ -186,6 +186,11 @@ while 1:
 
         out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
 
+        # Allow deletion of TIFF Image for everyone
+        # By default, all files created by this script will be owned by root!
+        # Note: If you want to restrict access to certain users, be sure to use the right chown
+        os.system("chmod 777 "+fn+str_filetype)
+
         out_str=str(out)
         print("\n\nScan: "+out_str)
         f_file.write("Return value scanimage: "+out_str+"\n")
@@ -210,6 +215,12 @@ while 1:
         f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S")+"\n")
 
         out=os.system("convert "+fn+str_filetype+" "+fn+"_"+out_str+".jpg")
+
+        # Allow deletion of JPG Image for everyone
+        # By default, all files created by this script will be owned by root!
+        # Note: If you want to restrict access to certain users, be sure to use the right chown
+        os.system("chmod 777 "+fn+"_"+out_str+".jpg")
+        
         out_str=str(out)
         print("\nConv: "+out_str)
         
@@ -223,15 +234,6 @@ while 1:
         if not os.access("./archive", os.F_OK):
             os.system("mkdir ./archive")
         os.system("mv "+fn+str_filetype+" ./archive")
-
-        # allow deletion of archived TIFF
-        os.system("chmod 777 ./archive/"+fn+str_filetype)
-
-
-        # Allow deletion of Image for everyone
-        # By default, all files created by this script will be owned by root!
-        # Note: If you want to restrict access to certain users, be sure to use the right chown
-        os.system("chmod 777 "+fn+".jpg")
 
         print("Done.")
         
