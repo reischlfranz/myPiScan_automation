@@ -28,18 +28,25 @@ GPIO.setup(12, GPIO.OUT) # Yellow
 GPIO.output(10,True)
 GPIO.output(12,True)
 
+# ######################
+# ### Initialization ###
+# ######################
+
+# Initiating file and path parameters
+
+# filepath only for testing purposes. Should be configured later on in settings file. 
+str_filepath="/public/img/"
+
+# filename prefix
+str_prefix="scn_"
+
+# filetype
+str_filetype=".tiff"
+
+
+
 
 def getfilename():
-    # Initiating file and path parameters
-    
-    # filepath only for testing purposes. Should be configured later on in settings file. 
-    str_filepath="/public/img/"
-    
-    # filename prefix
-    str_prefix="scn_"
-    
-    # filetype
-    str_filetype=".tiff"
     
     # done initiating file and path parameters
     
@@ -87,9 +94,9 @@ def getfilename():
         print(str_out)
         i=0
         while i<=num_iter:
-            str_filename=str_prefix+str_datetime_now+"_"+str(i)+str_filetype
+            str_filename=str_prefix+str_datetime_now+"_"+str(i)
             
-            if not os.access(str_filepath+str_filename, os.F_OK):
+            if not os.access(str_filename, os.F_OK):
                 
                 # DEBUG output: XXXXX
                 str_out="File does not exist: "+str_filename
@@ -120,7 +127,7 @@ def getfilename():
     #end if
     
     
-    return str_filepath+str_filename
+    return str_filename
 #end function
 
 
@@ -153,6 +160,8 @@ print("------------")
 print(" ")  
 print("Ready for new scan.")
 
+os.chdir(str_filepath)
+
 GPIO.output(10, False) #Green LED on -> System ready.
 
 while 1:
@@ -162,7 +171,7 @@ while 1:
         # No input, Scan
 
         # Open Logfile, Write timestamp
-        f_file=open("/public/img_log.txt", mode='a')
+        f_file=open("./img_log.txt", mode='a')
         f_file.write("Scan gestartet:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         
         # Setting LEDs
@@ -175,7 +184,7 @@ while 1:
         print("Filename:"+fn)
         f_file.write("generated Filename:"+fn)
 
-        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn)
+        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
 
         out_str=str(out)
         print("\n\nScan: "+out_str)
@@ -200,7 +209,7 @@ while 1:
         print("Scan complete. Converting to jpg...")
         f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S"))
 
-        out=os.system("convert "+fn+" "+fn+"__"+out_str+"__.jpg")
+        out=os.system("convert "+fn+str_filetype+" "+fn+"_"+out_str+".jpg")
         out_str=str(out)
         print("\nConv: "+out_str)
         
@@ -208,21 +217,21 @@ while 1:
         f_file.write("Conversion complete. Deleting/Archiving TIFF... "+datetime.now().strftime("%H:%M:%S"))
         
         # Comment out the next line if you want to keep the TIFF
-        # os.system("rm -f "+fn)
+        # os.system("rm -f "+fn+str_filetype)
         
         #DEBUG: Keep TIFF in archive
-        if not os.access("/public/img/archive", os.F_OK):
-            os.system("mkdir /public/img/archive")
-        os.system("mv "+fn+" /public/img/archive")
+        if not os.access("./archive", os.F_OK):
+            os.system("mkdir ./archive")
+        os.system("mv "+fn+str_filetype+" ./archive")
 
         # allow deletion of archived TIFF
-        os.system("chmod 777 /public/img/archive/"+fn)
+        os.system("chmod 777 ./archive/"+fn+str_filetype)
 
 
         # Allow deletion of Image for everyone
         # By default, all files created by this script will be owned by root!
         # Note: If you want to restrict access to certain users, be sure to use the right chown
-        os.system("chmod 777 "+fn)
+        os.system("chmod 777 "+fn+".jpg")
 
         print("Done.")
         
