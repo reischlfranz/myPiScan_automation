@@ -200,7 +200,7 @@ while 1:
 
         # Insert TIFF Broken Check here!
         # ---
-        tiff_file=open(fn,mode='rb')
+        tiff_file=open(fn+str_filetype,mode='rb')
         tiff_broken=tiffcheck(tiff_file, 1024)
         
         if tiff_broken==0:
