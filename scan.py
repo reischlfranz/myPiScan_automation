@@ -286,7 +286,7 @@ while 1:
         #end if
         do_other_thing=0;
         
-        sleep(5)
+        sleep(0.7)
 
 #end while
 
