@@ -242,7 +242,8 @@ os.chdir(str_filepath)
 GPIO.output(10, False) #Green LED on -> System ready.
 
 print("DEBUG Info: Dev environment working")
-
+do_other_thing=0;
+        
 while 1:
 
 
@@ -265,6 +266,7 @@ while 1:
         else:
             print("Button pressed less than 2 seconds")
         #end if
+        do_other_thing=0;
         
         #do_scan()
 
