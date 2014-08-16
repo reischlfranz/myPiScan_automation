@@ -262,9 +262,9 @@ while 1:
         #end for
         
         if do_other_thing==1:
-            print("Button pressed 2 sec or longer")
-        else:
             print("Button pressed less than 2 seconds")
+        else:
+            print("Button pressed 2 sec or longer")
         #end if
         do_other_thing=0;
         
