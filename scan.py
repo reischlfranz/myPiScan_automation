@@ -131,8 +131,7 @@ def getfilename():
 #end function
 
 
-def do_scan():
-    # No input, Scan
+def do_scan(quality=0):
 
     # Open Logfile, Write timestamp
     f_file=open("./img_log.txt", mode='a')
@@ -148,7 +147,16 @@ def do_scan():
     print("Filename:"+fn)
     f_file.write("generated Filename:"+fn+"\n")
 
-    out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
+    if(quality==1):
+        
+        # Do a 300 DPI Color scan
+        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
+        
+    elif(quality==0):
+        
+        # Do a 150 DPI Black&White scan 
+        out=os.system("scanimage --format=tiff --mode=Gray --resolution=150 -p -v > "+fn+str_filetype)
+    #end if
 
     # Allow deletion of TIFF Image for everyone
     # By default, all files created by this script will be owned by root!
@@ -262,11 +270,19 @@ while 1:
         #end for
         
         if do_other_thing==1:
+            
             print("Button pressed less than 2 seconds")
-            do_scan()
+            
+            # Quality = 0
+            do_scan(0) 
+            
         else:
+            
             print("Button pressed 2 sec or longer")
-            do_scan()
+            
+            # Quality = 1
+            do_scan(1)
+            
         #end if
         do_other_thing=0;
         
