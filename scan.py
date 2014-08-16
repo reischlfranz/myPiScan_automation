@@ -164,6 +164,8 @@ os.chdir(str_filepath)
 
 GPIO.output(10, False) #Green LED on -> System ready.
 
+print("DEBUG Info: Dev environment working")
+
 while 1:
 
 
