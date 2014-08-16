@@ -226,7 +226,7 @@ def tiffcheck(f,size=1024):
     for i in range(size-2):
         ch=f.read(1)
         if ch=="":
-            print("EOF found, should not have come to this. I´m confused...")
+            print("EOF found, should not have come to this. I'm confused...")
             return 0
         if ch==chr(0xff):
             print("FF gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
