@@ -84,9 +84,9 @@ def getfilename():
         print(str_out)
         
         # TESTING create an empty file there
-        f_file=open(str_filepath+str_filename, mode='w')
-        time.sleep(2)
-        f_file.close()
+        #f_file=open(str_filepath+str_filename, mode='w')
+        #time.sleep(2)
+        #f_file.close()
         
     else:
         # DEBUG output: XXXXX
