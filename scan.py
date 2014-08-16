@@ -263,13 +263,13 @@ while 1:
         
         if do_other_thing==1:
             print("Button pressed less than 2 seconds")
+            do_scan()
         else:
             print("Button pressed 2 sec or longer")
+            do_scan()
         #end if
         do_other_thing=0;
         
-        #do_scan()
-
         sleep(5)
 
 #end while
