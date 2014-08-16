@@ -225,14 +225,14 @@ def tiffcheck(f,size=1024):
         ch=f.read(1)
         if ch=="":
             print("EOF found prior")
-            return 1
+            return 0
         if not ch==chr(0xff):
             print("Abbruch, anderen char gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
-            return 0
+            return 1
         print("Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell())) # DEBUG Info
         #f.seek(1,os.SEEK_CUR)
     
-    return 1
+    return 0
 
 
 
