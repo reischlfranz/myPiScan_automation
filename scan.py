@@ -247,7 +247,25 @@ while 1:
 
 
     if GPIO.input(8):
+        
+        # If button is pressed longer than 2 seconds (20x 0.1 sec), do other thing
+        for i in range(1, 20):
 
+            sleep(0.1)
+                        
+            if not GPIO.input(8):
+                do_other_thing=1;
+                break;
+            #end if
+                        
+        #end for
+        
+        if do_other_thing==1:
+            print "Button pressed 2 sec or longer"
+        else:
+            print "Button pressed less than 2 seconds"
+        #end if
+        
         do_scan()
 
         sleep(5)
