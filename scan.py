@@ -131,6 +131,83 @@ def getfilename():
 #end function
 
 
+def do_scan():
+    # No input, Scan
+
+    # Open Logfile, Write timestamp
+    f_file=open("./img_log.txt", mode='a')
+    f_file.write("Scan gestartet:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\n")
+    
+    # Setting LEDs
+    GPIO.output(12, False) # Yellow LED on -> working
+    GPIO.output(10, True) # Green LED off -> scanning in progress
+    
+    # Generate Filename
+    fn=getfilename()
+    
+    print("Filename:"+fn)
+    f_file.write("generated Filename:"+fn+"\n")
+
+    out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
+
+    # Allow deletion of TIFF Image for everyone
+    # By default, all files created by this script will be owned by root!
+    # Note: If you want to restrict access to certain users, be sure to use the right chown
+    os.system("chmod 777 "+fn+str_filetype)
+
+    out_str=str(out)
+    print("\n\nScan: "+out_str)
+    f_file.write("Return value scanimage: "+out_str+"\n")
+
+    # Setting LEDs
+    GPIO.output(10, False) # Green LED on -> scanning done
+
+    # Insert TIFF Broken Check here!
+    # ---
+    tiff_file=open(fn+str_filetype,mode='rb')
+    tiff_broken=tiffcheck(tiff_file, 1024)
+    
+    if tiff_broken==0:
+        print("TIFF is OK, continue")
+    else:
+        print("TIFF is broken")
+    # ---
+    # TIFF Broken Check done
+
+    print("\n")  
+    print("Scan complete. Converting to jpg...")
+    f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S")+"\n")
+
+    out=os.system("convert "+fn+str_filetype+" "+fn+"_"+out_str+".jpg")
+
+    # Allow deletion of JPG Image for everyone
+    # By default, all files created by this script will be owned by root!
+    # Note: If you want to restrict access to certain users, be sure to use the right chown
+    os.system("chmod 777 "+fn+"_"+out_str+".jpg")
+    
+    out_str=str(out)
+    print("\nConv: "+out_str)
+    
+    print("Conversion complete. Deleting TIFF...")
+    f_file.write("Conversion complete. Deleting/Archiving TIFF... "+datetime.now().strftime("%H:%M:%S")+"\n")
+    
+    # Comment out the next line if you want to keep the TIFF
+    # os.system("rm -f "+fn+str_filetype)
+    
+    #DEBUG: Keep TIFF in archive
+    if not os.access("./archive", os.F_OK):
+        os.system("mkdir ./archive")
+    os.system("mv "+fn+str_filetype+" ./archive")
+
+    print("Done.")
+    
+    # I could copy files to network drive now...
+    GPIO.output(12, True) #Yellow LED off -> complete
+
+    print(" ")  
+    print("Ready for new scan.")
+#end function
+
 
 def tiffcheck(f,size=1024):
     pos=f.seek(-size,os.SEEK_END)
@@ -170,81 +247,8 @@ while 1:
 
 
     if GPIO.input(8):
-        # No input, Scan
 
-        # Open Logfile, Write timestamp
-        f_file=open("./img_log.txt", mode='a')
-        f_file.write("Scan gestartet:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\n")
-        
-        # Setting LEDs
-        GPIO.output(12, False) # Yellow LED on -> working
-        GPIO.output(10, True) # Green LED off -> scanning in progress
-        
-        # Generate Filename
-        fn=getfilename()
-        
-        print("Filename:"+fn)
-        f_file.write("generated Filename:"+fn+"\n")
-
-        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
-
-        # Allow deletion of TIFF Image for everyone
-        # By default, all files created by this script will be owned by root!
-        # Note: If you want to restrict access to certain users, be sure to use the right chown
-        os.system("chmod 777 "+fn+str_filetype)
-
-        out_str=str(out)
-        print("\n\nScan: "+out_str)
-        f_file.write("Return value scanimage: "+out_str+"\n")
-
-        # Setting LEDs
-        GPIO.output(10, False) # Green LED on -> scanning done
-
-        # Insert TIFF Broken Check here!
-        # ---
-        tiff_file=open(fn+str_filetype,mode='rb')
-        tiff_broken=tiffcheck(tiff_file, 1024)
-        
-        if tiff_broken==0:
-            print("TIFF is OK, continue")
-        else:
-            print("TIFF is broken")
-        # ---
-        # TIFF Broken Check done
-
-        print("\n")  
-        print("Scan complete. Converting to jpg...")
-        f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S")+"\n")
-
-        out=os.system("convert "+fn+str_filetype+" "+fn+"_"+out_str+".jpg")
-
-        # Allow deletion of JPG Image for everyone
-        # By default, all files created by this script will be owned by root!
-        # Note: If you want to restrict access to certain users, be sure to use the right chown
-        os.system("chmod 777 "+fn+"_"+out_str+".jpg")
-        
-        out_str=str(out)
-        print("\nConv: "+out_str)
-        
-        print("Conversion complete. Deleting TIFF...")
-        f_file.write("Conversion complete. Deleting/Archiving TIFF... "+datetime.now().strftime("%H:%M:%S")+"\n")
-        
-        # Comment out the next line if you want to keep the TIFF
-        # os.system("rm -f "+fn+str_filetype)
-        
-        #DEBUG: Keep TIFF in archive
-        if not os.access("./archive", os.F_OK):
-            os.system("mkdir ./archive")
-        os.system("mv "+fn+str_filetype+" ./archive")
-
-        print("Done.")
-        
-        # I could copy files to network drive now...
-        GPIO.output(12, True) #Yellow LED off -> complete
-
-        print(" ")  
-        print("Ready for new scan.")
-
+        do_scan()
 
         sleep(5)
 
