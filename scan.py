@@ -174,6 +174,7 @@ def do_scan(quality=0):
     # ---
     tiff_file=open(fn+str_filetype,mode='rb')
     tiff_broken=tiffcheck(tiff_file, 1024)
+    tiff_file.close()
     
     if tiff_broken==0:
         print("TIFF is OK, continue")
