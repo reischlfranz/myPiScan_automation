@@ -232,9 +232,9 @@ def tiffcheck(f,size=1024):
             print("FF gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
             defects_in_a_row+=1
             
-            if(defects_in_a_row>=8):
-                # 8 defects in a row detected, assuming TIFF is broken
-                print("8 defects in a row detected, assuming TIFF is broken, quitting...")
+            if(defects_in_a_row>=64):
+                # 8 defect bytes in a row detected, assuming TIFF is broken
+                print("8 defect bytes in a row detected, assuming TIFF is broken, quitting...")
                 return 1
         
             continue
