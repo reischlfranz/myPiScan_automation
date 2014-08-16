@@ -221,15 +221,25 @@ def do_scan(quality=0):
 def tiffcheck(f,size=1024):
     pos=f.seek(-size,os.SEEK_END)
     
+    defects_in_a_row=0
+    
     for i in range(size-2):
         ch=f.read(1)
         if ch=="":
             print("EOF found prior")
             return 0
-        if not ch==chr(0xff):
-            print("Abbruch, anderen char gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
-            return 1
-        print("Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell())) # DEBUG Info
+        if ch==chr(0xff):
+            print("FF gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
+            defects_in_a_row+=1
+            
+            if(defects_in_a_row>=8):
+                # 8 defects in a row detected, assuming TIFF is broken
+                return 1
+        
+            continue
+        
+        defects_in_a_row=0
+        # print("Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell())) # DEBUG Info
         #f.seek(1,os.SEEK_CUR)
     
     return 0
