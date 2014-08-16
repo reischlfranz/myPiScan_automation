@@ -226,7 +226,7 @@ def tiffcheck(f,size=1024):
     for i in range(size-2):
         ch=f.read(1)
         if ch=="":
-            print("EOF found prior")
+            print("EOF found, should not have come to this. I´m confused...")
             return 0
         if ch==chr(0xff):
             print("FF gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
@@ -235,9 +235,10 @@ def tiffcheck(f,size=1024):
             if(defects_in_a_row>=8):
                 # 8 defects in a row detected, assuming TIFF is broken
                 print("8 defects in a row detected, assuming TIFF is broken, quitting...")
-            return 1
+                return 1
         
             continue
+        #end if
         
         defects_in_a_row=0
         # print("Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell())) # DEBUG Info
