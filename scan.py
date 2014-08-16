@@ -234,7 +234,8 @@ def tiffcheck(f,size=1024):
             
             if(defects_in_a_row>=8):
                 # 8 defects in a row detected, assuming TIFF is broken
-                return 1
+                print("8 defects in a row detected, assuming TIFF is broken, quitting...")
+            return 1
         
             continue
         
