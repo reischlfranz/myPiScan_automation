@@ -249,7 +249,6 @@ os.chdir(str_filepath)
 
 GPIO.output(10, False) #Green LED on -> System ready.
 
-print("DEBUG Info: Dev environment working")
 do_other_thing=0;
         
 while 1:
