@@ -86,10 +86,10 @@ def read_settings():
     print "SETTINGS1_width:"+SETTINGS1_width
     print "SETTINGS1_height:"+SETTINGS1_height
     print " "
-    print "SETTINGS2_color:"+SETTINGS1_color
-    print "SETTINGS2_resolution:"+SETTINGS1_resolution
-    print "SETTINGS2_width:"+SETTINGS1_width
-    print "SETTINGS2_height:"+SETTINGS1_height
+    print "SETTINGS2_color:"+SETTINGS2_color
+    print "SETTINGS2_resolution:"+SETTINGS2_resolution
+    print "SETTINGS2_width:"+SETTINGS2_width
+    print "SETTINGS2_height:"+SETTINGS2_height
     
 
 #end def
