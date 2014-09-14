@@ -69,6 +69,16 @@ def read_settings():
     Config
     Config.read(str_settingspath+"/settings.ini")
     
+    global SETTINGS1_color
+    global SETTINGS1_resolution
+    global SETTINGS1_width
+    global SETTINGS1_height
+    
+    global SETTINGS2_color
+    global SETTINGS2_resolution
+    global SETTINGS2_width
+    global SETTINGS2_height
+    
     SETTINGS1_color=Config.get("Scan1", "color")
     SETTINGS1_resolution=Config.get("Scan1", "resolution")
     SETTINGS1_width=Config.get("Scan1", "width")
@@ -180,6 +190,16 @@ def getfilename():
 
 
 def do_scan(quality=0):
+
+    global SETTINGS1_color
+    global SETTINGS1_resolution
+    global SETTINGS1_width
+    global SETTINGS1_height
+    
+    global SETTINGS2_color
+    global SETTINGS2_resolution
+    global SETTINGS2_width
+    global SETTINGS2_height
 
     # Open Logfile, Write timestamp
     f_file=open("./img_log.txt", mode='a')
