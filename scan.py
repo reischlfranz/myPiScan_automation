@@ -195,35 +195,42 @@ def do_scan(quality=0):
     print("Filename:"+fn)
     f_file.write("generated Filename:"+fn+"\n")
 
-    if(quality==1):
-        
-        # Do a scan with settings 2 (Standard is a full size A4 300 DPI Color scan)
-        out=os.system(
-            "scanimage " 
-            "--format=tiff " 
-            "--mode="+SETTINGS2_color +" "
-            "--resolution "+SETTINGS2_resolution+" "
-            "-l 0mm " # starting position top left, X coordinate
-            "-t 0mm " # starting position top left, Y coordinate
-            "-x "+ SETTINGS2_width  + " " # Width
-            "-y "+ SETTINGS2_height + " " # Height
-            "-p -v " +
-            "> "+fn+str_filetype)
-        
-    elif(quality==0):
-        
+    sys_call=""
+    
+    if(quality==0):
         # Do a scan with settings 1 (Standard is a full size A4 150 DPI Black&White scan) 
-        out=os.system(
-            "scanimage " 
-            "--format=tiff " 
-            "--mode="+SETTINGS1_color +" "
-            "--resolution "+SETTINGS1_resolution+" "
-            "-l 0mm " # starting position top left, X coordinate
-            "-t 0mm " # starting position top left, Y coordinate
-            "-x "+ SETTINGS1_width  + " " # Width
-            "-y "+ SETTINGS1_height + " " # Height
-            "-p -v " +
-            "> "+fn+str_filetype)    #end if
+        sys_call="scanimage " 
+        "--format=tiff " 
+        "--mode="+SETTINGS1_color +" "
+        "--resolution "+SETTINGS1_resolution+" "
+        "-l 0mm " # starting position top left, X coordinate
+        "-t 0mm " # starting position top left, Y coordinate
+        "-x "+ SETTINGS1_width  + " " # Width
+        "-y "+ SETTINGS1_height + " " # Height
+        "-p -v " +
+        "> "+fn+str_filetype        
+        
+    elif(quality==1):
+        # Do a scan with settings 2 (Standard is a full size A4 300 DPI Color scan)
+        sys_call="scanimage " 
+        "--format=tiff " 
+        "--mode="+SETTINGS2_color +" "
+        "--resolution "+SETTINGS2_resolution+" "
+        "-l 0mm " # starting position top left, X coordinate
+        "-t 0mm " # starting position top left, Y coordinate
+        "-x "+ SETTINGS2_width  + " " # Width
+        "-y "+ SETTINGS2_height + " " # Height
+        "-p -v " +
+        "> "+fn+str_filetype
+    else:
+        return -1
+
+    #end if
+    print "++"
+    print "++ will now use the following command: ++"
+    print "++ " + sys_call + " ++"
+    print "++"
+    out=os.system(sys_call)
 
     # Allow deletion of TIFF Image for everyone
     # By default, all files created by this script will be owned by root!
