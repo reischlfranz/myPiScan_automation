@@ -199,7 +199,7 @@ def do_scan(quality=0):
     
     if(quality==0):
         # Do a scan with settings 1 (Standard is a full size A4 150 DPI Black&White scan) 
-        sys_call="scanimage " 
+        sys_call=("scanimage " 
         "--format=tiff " 
         "--mode="+SETTINGS1_color +" "
         "--resolution "+SETTINGS1_resolution+" "
@@ -208,11 +208,11 @@ def do_scan(quality=0):
         "-x "+ SETTINGS1_width  + " " # Width
         "-y "+ SETTINGS1_height + " " # Height
         "-p -v "
-        "> "+fn+str_filetype        
+        "> "+fn+str_filetype)    
         
     elif(quality==1):
         # Do a scan with settings 2 (Standard is a full size A4 300 DPI Color scan)
-        sys_call="scanimage " 
+        sys_call=("scanimage " 
         "--format=tiff " 
         "--mode="+SETTINGS2_color +" "
         "--resolution "+SETTINGS2_resolution+" "
@@ -221,7 +221,7 @@ def do_scan(quality=0):
         "-x "+ SETTINGS2_width  + " " # Width
         "-y "+ SETTINGS2_height + " " # Height
         "-p -v "
-        "> "+fn+str_filetype
+        "> "+fn+str_filetype)
     else:
         return -1
 
