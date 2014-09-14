@@ -11,6 +11,19 @@ from time import sleep
 #import Raspberry Pi GPIO module
 import RPi.GPIO as GPIO
 
+import ConfigParser
+
+SETTINGS1_color="Gray"
+SETTINGS1_resolution="150"
+SETTINGS1_width="215.9mm"
+SETTINGS1_height="297.18mm"
+
+SETTINGS2_color="Color"
+SETTINGS2_resolution="300"
+SETTINGS2_width="215.9mm"
+SETTINGS2_height="297.18mm"
+
+
 # Set the mode of numbering the pins. 
 GPIO.setmode(GPIO.BOARD)
 
@@ -37,14 +50,33 @@ GPIO.output(12,True)
 # filepath only for testing purposes. Should be configured later on in settings file. 
 str_filepath="/public/img/"
 
+# path to settings file
+str_settingspath="./settings"
+
+# make settings file writeable
+# should be disabled in production!
+os.system("chmod 777 "+str_settingspath+"/settings.ini")
+
 # filename prefix
 str_prefix="scn_"
 
 # filetype
 str_filetype=".tiff"
 
+def read_settings():
 
+    Config = ConfigParser.ConfigParser()
+    Config
+    Config.read(str_settingspath+"/settings.ini")
+    
+    SETTINGS1_color=Config.get("Scan1", "color")
+    SETTINGS1_resolution=Config.get("Scan1", "resolution")
+    
+    SETTINGS2_color=Config.get("Scan2", "color")
+    SETTINGS2_resolution=Config.get("Scan2", "resolution")
+    
 
+#end def
 
 def getfilename():
     
@@ -149,14 +181,33 @@ def do_scan(quality=0):
 
     if(quality==1):
         
-        # Do a 300 DPI Color scan
-        out=os.system("scanimage --format=tiff --mode=Color --resolution=300 -p -v > "+fn+str_filetype)
+        # Do a scan with settings 2 (Standard is a full size A4 300 DPI Color scan)
+        out=os.system(
+            "scanimage " 
+            "--format=tiff " 
+            "--mode="+SETTINGS2_color +" "
+            "--resolution "+SETTINGS2_resolution+" "
+            "-l 0mm " # starting position top left, X coordinate
+            "-t 0mm " # starting position top left, Y coordinate
+            "-x "+ SETTINGS2_width  + " " # Width
+            "-y "+ SETTINGS2_height + " " # Height
+            "-p -v " +
+            "> "+fn+str_filetype)
         
     elif(quality==0):
         
-        # Do a 150 DPI Black&White scan 
-        out=os.system("scanimage --format=tiff --mode=Gray --resolution=150 -p -v > "+fn+str_filetype)
-    #end if
+        # Do a scan with settings 1 (Standard is a full size A4 150 DPI Black&White scan) 
+        out=os.system(
+            "scanimage " 
+            "--format=tiff " 
+            "--mode="+SETTINGS1_color +" "
+            "--resolution "+SETTINGS1_resolution+" "
+            "-l 0mm " # starting position top left, X coordinate
+            "-t 0mm " # starting position top left, Y coordinate
+            "-x "+ SETTINGS1_width  + " " # Width
+            "-y "+ SETTINGS1_height + " " # Height
+            "-p -v " +
+            "> "+fn+str_filetype)    #end if
 
     # Allow deletion of TIFF Image for everyone
     # By default, all files created by this script will be owned by root!
@@ -297,6 +348,14 @@ while 1:
             
         #end if
         do_other_thing=0;
+        
+        #re-read settings when "deleteme" file is gone 
+        if not os.path.exists(str_settingspath+"/deleteme"):
+            read_settings()
+            delfile=open(str_settingspath+"/deleteme",mode='w')
+            delfile.close()
+            os.system("chmod 777 "+str_settingspath+"/deleteme")
+        #end if
         
         sleep(0.7)
 
