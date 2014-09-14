@@ -329,6 +329,10 @@ os.chdir(str_filepath)
 
 GPIO.output(10, False) #Green LED on -> System ready.
 
+#first time reading settings file
+read_settings()
+
+
 do_other_thing=0;
         
 while 1:
