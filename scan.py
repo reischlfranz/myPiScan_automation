@@ -64,16 +64,32 @@ str_prefix="scn_"
 str_filetype=".tiff"
 
 def read_settings():
-
+    print "Re-Reading settings file"
     Config = ConfigParser.ConfigParser()
     Config
     Config.read(str_settingspath+"/settings.ini")
     
     SETTINGS1_color=Config.get("Scan1", "color")
     SETTINGS1_resolution=Config.get("Scan1", "resolution")
+    SETTINGS1_width=Config.get("Scan1", "width")
+    SETTINGS1_height=Config.get("Scan1", "height")
     
     SETTINGS2_color=Config.get("Scan2", "color")
     SETTINGS2_resolution=Config.get("Scan2", "resolution")
+    SETTINGS2_width=Config.get("Scan1", "width")
+    SETTINGS2_height=Config.get("Scan1", "height")
+
+    #DEBUG: Print all those on screen
+    print "Finished reading settings file:"
+    print "SETTINGS1_color:"+SETTINGS1_color
+    print "SETTINGS1_resolution:"+SETTINGS1_resolution
+    print "SETTINGS1_width:"+SETTINGS1_width
+    print "SETTINGS1_height:"+SETTINGS1_height
+    print " "
+    print "SETTINGS2_color:"+SETTINGS1_color
+    print "SETTINGS2_resolution:"+SETTINGS1_resolution
+    print "SETTINGS2_width:"+SETTINGS1_width
+    print "SETTINGS2_height:"+SETTINGS1_height
     
 
 #end def
