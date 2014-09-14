@@ -207,7 +207,7 @@ def do_scan(quality=0):
         "-t 0mm " # starting position top left, Y coordinate
         "-x "+ SETTINGS1_width  + " " # Width
         "-y "+ SETTINGS1_height + " " # Height
-        "-p -v " +
+        "-p -v "
         "> "+fn+str_filetype        
         
     elif(quality==1):
@@ -220,7 +220,7 @@ def do_scan(quality=0):
         "-t 0mm " # starting position top left, Y coordinate
         "-x "+ SETTINGS2_width  + " " # Width
         "-y "+ SETTINGS2_height + " " # Height
-        "-p -v " +
+        "-p -v "
         "> "+fn+str_filetype
     else:
         return -1
