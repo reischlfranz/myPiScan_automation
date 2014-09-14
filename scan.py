@@ -76,8 +76,8 @@ def read_settings():
     
     SETTINGS2_color=Config.get("Scan2", "color")
     SETTINGS2_resolution=Config.get("Scan2", "resolution")
-    SETTINGS2_width=Config.get("Scan1", "width")
-    SETTINGS2_height=Config.get("Scan1", "height")
+    SETTINGS2_width=Config.get("Scan2", "width")
+    SETTINGS2_height=Config.get("Scan2", "height")
 
     #DEBUG: Print all those on screen
     print "Finished reading settings file:"
@@ -358,7 +358,7 @@ while 1:
             #end if
                         
         #end for
-        
+        read_settings()
         if do_other_thing==1:
             
             print("Button pressed less than 2 seconds")
@@ -376,13 +376,13 @@ while 1:
         #end if
         do_other_thing=0;
         
-        #re-read settings when "deleteme" file is gone 
-        if not os.path.exists(str_settingspath+"/deleteme"):
-            read_settings()
-            delfile=open(str_settingspath+"/deleteme",mode='w')
-            delfile.close()
-            os.system("chmod 777 "+str_settingspath+"/deleteme")
-        #end if
+#        #re-read settings when "deleteme" file is gone 
+#        if not os.path.exists(str_settingspath+"/deleteme"):
+#            read_settings()
+#            delfile=open(str_settingspath+"/deleteme",mode='w')
+#            delfile.close()
+#            os.system("chmod 777 "+str_settingspath+"/deleteme")
+#        #end if
         
         sleep(0.7)
 
