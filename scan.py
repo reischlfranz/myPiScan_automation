@@ -51,7 +51,7 @@ GPIO.output(12,True)
 str_filepath="/public/img/"
 
 # path to settings file
-str_settingspath=os.getcwd()+"/settings"
+str_settingspath=os.getcwd()+"/"
 
 # make settings file writeable
 # should be disabled in production!
