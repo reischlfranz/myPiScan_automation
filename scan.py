@@ -197,6 +197,8 @@ def do_scan(quality=0):
 
     sys_call=""
     
+    print "TEST: SETTINGS1_height:"+SETTINGS1_height
+    
     if(quality==0):
         # Do a scan with settings 1 (Standard is a full size A4 150 DPI Black&White scan) 
         sys_call=("scanimage " 
