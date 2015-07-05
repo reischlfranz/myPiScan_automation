@@ -123,10 +123,18 @@ def getfilename():
 	filenumber=1
 	
 	#Getting the date portion of lastfilename
-	lastfiledate=lastfilename[:6]
+	lastfiledate=lastfilename[:10]
+	
+	# DEBUG output: print lastfiledate
+	str_out="lastfiledate: "+lastfiledate
+	print(str_out)
 	
 	# get current date
 	str_date=datetime.now().strftime("%Y-%m-%d")
+	
+	# DEBUG output: print str_date
+	str_out="str_date: "+str_date
+	print(str_out)
 	
 	#If last file was today, increase number for next file. Otherwise, leave 1
 	if lastfiledate==str_date:
