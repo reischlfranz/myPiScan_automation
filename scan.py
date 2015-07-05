@@ -142,7 +142,7 @@ def getfilename():
 		str_out="lastfilename[14:2]: "+lastfilename[14:2]
 		print(str_out)
 
-		filenumber=(int)lastfilename[14:2]+1
+		filenumber=int(lastfilename[14:2])+1
 	#end if
 	
 	#Contecating filename
