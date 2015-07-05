@@ -111,7 +111,7 @@ def getfilename():
 	str_filename=""     # String: completed filename
 	
 	#Read the last filename from tempfile - files have format of '2015-07-15_pic05'
-	lastfile=open('lastscan',w)
+	lastfile=open('lastscan','w')
 	lastfilename=lastfile.read()
 	lastfile.close()
 	
@@ -185,7 +185,7 @@ def getfilename():
 	#end if
 	
 	# Write new filename into tempfile
-	lastfile=open('lastscan',w)
+	lastfile=open('lastscan','w')
 	lastfilename=lastfile.write(str_filename)
 	lastfile.close()
 	
