@@ -117,6 +117,7 @@ def getfilename():
 	
 	# DEBUG output: print lastfilename
 	str_out="lastfilename: "+lastfilename
+	print(str_out)
 	
 	#filenumber defaults to 1, except if there are already files from the same date
 	filenumber=1
