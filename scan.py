@@ -138,11 +138,11 @@ def getfilename():
 	
 	#If last file was today, increase number for next file. Otherwise, leave 1
 	if lastfiledate==str_date:
-		filenumber=lastfilename[14:2]+1
-		
 		# DEBUG output: print lastfilename[14:2]
 		str_out="lastfilename[14:2]: "+lastfilename[14:2]
 		print(str_out)
+
+		filenumber=(int)lastfilename[14:2]+1
 	#end if
 	
 	#Contecating filename
