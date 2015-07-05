@@ -115,6 +115,9 @@ def getfilename():
 	lastfilename=lastfile.read()
 	lastfile.close()
 	
+	# DEBUG output: print lastfilename
+	str_out="lastfilename: "+lastfilename
+	
 	#filenumber defaults to 1, except if there are already files from the same date
 	filenumber=1
 	
@@ -126,10 +129,10 @@ def getfilename():
 	
 	#If last file was today, increase number for next file. Otherwise, leave 1
 	if lastfiledate==str_date:
-		filenumber=lastfilename[7:2]+1
+		filenumber=lastfilename[14:2]+1
 		
-		# DEBUG output: print lastfilename[7:2]
-		str_out="lastfilename[7:2]: "+lastfilename[7:2]
+		# DEBUG output: print lastfilename[14:2]
+		str_out="lastfilename[14:2]: "+lastfilename[14:2]
 		print(str_out)
 	#end if
 	
@@ -330,7 +333,7 @@ def tiffcheck(f,size=1024):
             print("EOF found, should not have come to this. I'm confused...")
             return 0
         if ch==chr(0xff):
-            print("FF gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
+            #print("FF gefunden:Position "+str(i)+"_Gelesen:"+hex(ord(ch))+"_Position_"+str(f.tell()))
             defects_in_a_row+=1
             
             if(defects_in_a_row>=64):
