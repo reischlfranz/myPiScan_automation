@@ -105,7 +105,7 @@ def read_settings():
 #end def
 
 def getfilename():
-    
+	
 	num_iter=15         # int: Number of iterations to try
 	str_date=""         # String: current date as string 
 	str_filename=""     # String: completed filename
@@ -121,8 +121,8 @@ def getfilename():
 	#Getting the date portion of lastfilename
 	lastfiledate=lastfilename[:6]
 	
-    # get current date
-    str_date=datetime.now().strftime("%Y-%m-%d")
+	# get current date
+	str_date=datetime.now().strftime("%Y-%m-%d")
 	
 	#If last file was today, increase number for next file. Otherwise, leave 1
 	if lastfiledate==str_date:
@@ -136,60 +136,60 @@ def getfilename():
 	#Contecating filename
 	str_filename=str_date+str_prefix+format(filenumber,'02d')
 	
-    # DEBUG output: print filename
-    str_out="Filename: "+str_filename
-    print(str_out)
-    
-    if not os.access(str_filepath+str_filename, os.F_OK):
-        # DEBUG output: XXXXX
-        str_out="File does not exist: "+str_filename
-        print(str_out)
-        
-    else:
-        # DEBUG output: XXXXX
-        str_out="File does already exist: "+str_filename
-        print(str_out)
-        i=0
-        while i<=num_iter:
-            filenumber=filenumber+1
+	# DEBUG output: print filename
+	str_out="Filename: "+str_filename
+	print(str_out)
+	
+	if not os.access(str_filepath+str_filename, os.F_OK):
+		# DEBUG output: XXXXX
+		str_out="File does not exist: "+str_filename
+		print(str_out)
+		
+	else:
+		# DEBUG output: XXXXX
+		str_out="File does already exist: "+str_filename
+		print(str_out)
+		i=0
+		while i<=num_iter:
+			filenumber=filenumber+1
 			str_filename=str_date+str_prefix+format(filenumber,'02d')
-            
-            if not os.access(str_filename, os.F_OK):
-                
-                # DEBUG output: XXXXX
-                str_out="File does not exist: "+str_filename
-                print(str_out)
-    
-                print(str_filename)
-                
-                break;
-            else:
-                # DEBUG output: XXXXX
-                str_out="File does already exist: "+str_filename
-                print(str_out)
-    
-                i=i+1            
-    
-                continue
-            #end if
-            
-        #end while
-        
-        if i>=num_iter:
-            # Too much iterations, giving up
-            print("Too many iterations, giving up")
-            return -1
-            
-        #end if
-           
-    #end if
-    
+			
+			if not os.access(str_filename, os.F_OK):
+				
+				# DEBUG output: XXXXX
+				str_out="File does not exist: "+str_filename
+				print(str_out)
+				
+				print(str_filename)
+				
+				break;
+			else:
+				# DEBUG output: XXXXX
+				str_out="File does already exist: "+str_filename
+				print(str_out)
+				
+				i=i+1            
+				
+				continue
+			#end if
+			
+		#end while
+		
+		if i>=num_iter:
+			# Too much iterations, giving up
+			print("Too many iterations, giving up")
+			return -1
+			
+		#end if
+		
+	#end if
+	
 	# Write new filename into tempfile
 	lastfile=open('lastscan',w)
 	lastfilename=lastfile.write(str_filename)
 	lastfile.close()
-    
-    return str_filename
+	
+	return str_filename
 #end function
 
 
