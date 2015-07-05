@@ -58,7 +58,7 @@ str_settingspath=os.getcwd()+"/"
 os.system("chmod 777 "+str_settingspath+"/settings.ini")
 
 # filename prefix
-str_prefix="scn_"
+str_prefix="_pic"
 
 # filetype
 str_filetype=".tiff"
@@ -106,32 +106,36 @@ def read_settings():
 
 def getfilename():
     
-    # done initiating file and path parameters
-    
-    
-    num_iter=15         # int: Number of iterations to try
-    str_date=""         # String: current date as string 
-    str_time=""         # String: current time as string
-    str_datetime_now="" # String: combined time and date to an unique string
-    str_filename=""     # String: completed filename
-    
+	num_iter=15         # int: Number of iterations to try
+	str_date=""         # String: current date as string 
+	str_filename=""     # String: completed filename
+	
+	#Read the last filename from tempfile - files have format of '2015-07-15_pic05'
+	lastfile=open('lastscan',w)
+	lastfilename=lastfile.read()
+	lastfile.close()
+	
+	#filenumber defaults to 1, except if there are already files from the same date
+	filenumber=1
+	
+	#Getting the date portion of lastfilename
+	lastfiledate=lastfilename[:6]
+	
     # get current date
     str_date=datetime.now().strftime("%Y-%m-%d")
-    
-    # get current time
-    str_time=datetime.now().strftime("%H_%M_%S")
-
-    # for testing purposes: strip the second of the filename and you have the chance to get a double filename
-    # str_time=datetime.now().strftime("%H_%M")
-    
-    # DEBUG output: print date and time
-    str_out="Todays date:: "+str_date+". Current time: "+str_time
-    print(str_out)
-    
-    # contencate filename
-    str_datetime_now=str_date+"_-_"+str_time
-    str_filename=str_prefix+str_datetime_now+str_filetype
-    
+	
+	#If last file was today, increase number for next file. Otherwise, leave 1
+	if lastfiledate==str_date:
+		filenumber=lastfilename[7:2]+1
+		
+		# DEBUG output: print lastfilename[7:2]
+		str_out="lastfilename[7:2]: "+lastfilename[7:2]
+		print(str_out)
+	#end if
+	
+	#Contecating filename
+	str_filename=str_date+str_prefix+format(filenumber,'02d')
+	
     # DEBUG output: print filename
     str_out="Filename: "+str_filename
     print(str_out)
@@ -141,18 +145,14 @@ def getfilename():
         str_out="File does not exist: "+str_filename
         print(str_out)
         
-        # TESTING create an empty file there
-        #f_file=open(str_filepath+str_filename, mode='w')
-        #time.sleep(2)
-        #f_file.close()
-        
     else:
         # DEBUG output: XXXXX
         str_out="File does already exist: "+str_filename
         print(str_out)
         i=0
         while i<=num_iter:
-            str_filename=str_prefix+str_datetime_now+"_"+str(i)
+            filenumber=filenumber+1
+			str_filename=str_date+str_prefix+format(filenumber,'02d')
             
             if not os.access(str_filename, os.F_OK):
                 
@@ -184,6 +184,10 @@ def getfilename():
            
     #end if
     
+	# Write new filename into tempfile
+	lastfile=open('lastscan',w)
+	lastfilename=lastfile.write(str_filename)
+	lastfile.close()
     
     return str_filename
 #end function
@@ -253,7 +257,8 @@ def do_scan(quality=0):
     print "++ " + sys_call + " ++"
     print "++"
     out=os.system(sys_call)
-
+	
+	
     # Allow deletion of TIFF Image for everyone
     # By default, all files created by this script will be owned by root!
     # Note: If you want to restrict access to certain users, be sure to use the right chown
