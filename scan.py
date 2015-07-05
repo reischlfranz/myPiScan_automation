@@ -288,12 +288,12 @@ def do_scan(quality=0):
     print("Scan complete. Converting to jpg...")
     f_file.write("Scan complete. Converting to jpg... "+datetime.now().strftime("%H:%M:%S")+"\n")
 
-    out=os.system("convert "+fn+str_filetype+" "+fn+"+".jpg")
+    out=os.system("convert "+fn+str_filetype+" "+fn+".jpg")
 
     # Allow deletion of JPG Image for everyone
     # By default, all files created by this script will be owned by root!
     # Note: If you want to restrict access to certain users, be sure to use the right chown
-    os.system("chmod 777 "+fn+"+".jpg")
+    os.system("chmod 777 "+fn+".jpg")
     
     out_str=str(out)
     print("\nConv: "+out_str)
